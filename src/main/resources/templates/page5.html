@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>page5</title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+page5
+
+
+<div>
+    <div>
+        <div>
+            <form id="formid">
+            <table>
+                <tbody id="paramtbody">
+                <tr>
+                    <td></td>
+                    <td><button type="button" id="paramsubmit" value="확인">확인</button></td>
+                </tr>
+                <tr>
+                    <td>url</td>
+                    <td><input type="text" id="addrs" name="addrs" ></td>
+                </tr>
+                <tr>
+                    <td>servicekey</td>
+                    <td><input type="text" id="servicekey" name="servicekey"></td>
+                </tr>
+                    <tr>
+                        <td>파라메터</td>
+                        <td><input type="text" class="param1" name="param1"></td>
+                        <td><input type="text" class="param2" name="param2"></td>
+                        <td><button type="button" id="addbtn" value="+">+</button>
+                            <button type="button" id="delbtn" value="-">-</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function (){
+        $('#addbtn').click(function(){
+            addparam();
+        });
+        $('#delbtn').click(function(){
+            delparam();
+        });
+        $('#paramsubmit').click(function(){
+            jsonsend();
+            //formsend();
+        });
+
+
+        function jsonsend(){
+            var formid = $('#formid').serializeArray();  //동적 입력된 값도 들어옴
+            var obj = {};
+            for (var i=0;i<formid.length;i++){
+                obj[formid[i]['name']] = formid[i]['value'];
+            }
+            var formjson = JSON.stringify(obj);
+            console.log('formid > ',formid,"obj > ",obj,', formjson> ',formjson);
+
+
+            var param1value = $(".param1").val();
+            var param2value = $(".param2").val();
+            console.log('param1value > ',param1value.length);
+
+
+            // var form1 = document.querySelector('form');
+            // var formData2 = new FormData(form1);
+            // console.log("formData2 > ",formData2,', ',form1);
+            //
+            // var something = {};
+            // var param1value = $(".param1").val();
+            // var param2value = $(".param2").val();
+            //key > param1value, value > param2value
+
+            //something[param1value] = param2value;
+
+            var jsondata = "";
+
+
+            $.ajax({
+                type : "post",
+                url : "/getparam1",
+                data : formid,
+                datatype:'json',
+                success : function(data){
+                    console.log("success > ",data);
+                },
+                error:function (xhr, status, error){
+                    console.log(error,xhr,status);
+                }
+            });//ajax
+
+        }
+
+        //form 데이터 전송
+        function formsend(){
+            var formData1 = $('form').serialize();
+            var form = document.querySelector('form');
+            var formData2 = new FormData(form);
+            var keyname = '';
+            var something = {};
+            var param1value = $(".param1").val();
+            var param2value = $(".param2").val();
+
+            something[param1value] = param2value;
+
+
+            for (var p of formData2.entries()){
+                console.log('entries > '+p[0]+' , '+p[1]);
+                something[param1value] = param2value;
+                //something[p[0]] = p[1];
+            }
+            console.log('something > ',something);
+
+
+
+            console.log("formdata1 > ",formData1);
+
+            $.ajax({
+                type : "post",
+                url : "/getparam1",
+                data : formData1,
+                success : function(data){
+                    console.log("success > ",data);
+                },
+                error:function (xhr, status, error){
+                    console.log(error,xhr,status);
+                }
+            });//ajax
+
+
+        }
+
+
+        //parameter 추가버튼
+        function addparam(){
+            var addhtml = "";
+
+            addhtml += "<tr>"+"<td>파라메터</td>";
+            addhtml += "<td>"+"<input type='text' class='param1' name='param1'>"+"</td>";
+            addhtml += "<td>"+"<input type='text' class='param2' name='param2'>"+"</td>";
+            addhtml += "</tr>";
+
+            $("#paramtbody").append(addhtml);
+
+        }
+
+        //parameter 삭제버튼
+        function delparam(){
+            var addhtml = "";
+            addhtml += "<tr>";
+
+        }
+
+
+
+    });
+
+</script>
+
+
+</body>
+</html>

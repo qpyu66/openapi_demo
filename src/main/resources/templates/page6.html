@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page6</title>
+</head>
+<body>
+
+url 전체 주소 입력 받고 확인 누르면 파라메터 별로 데이터가 input 안에 들어가게되고
+호출을 누르면 해당 파라메터 값으로 url을 호출해 결과 xml데이터를 textarea에 출력한다
+<br><br>
+---------
+
+<div>
+    <div>
+        <div>
+            <table > <!-- class="table table-bordered table-hover text-center" width="100%"  -->
+                <tbody id="paramtbody">
+                <tr>
+                    <td>url</td>
+                    <td><input type="text" id="addrs6" size = "50"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button type="button" id="paramsubmit" value="확인">확인</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        -------
+
+        <div id = "resultview1">
+
+            <table >
+                <tbody id="urltbody">
+
+                </tbody>
+                <tfoot id = 'tfoot1' ></tfoot>
+            </table>
+        </div>
+
+        <div>
+            <div id="resultarea">
+                <!--                <textarea id="textarea2" cols="50" rows="30">-->
+                <!--                </textarea>-->
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function (){
+        //동적버튼 이벤트
+        $(document).on('click','#paramsubmit',function(){
+            jsonsend();
+        });
+        $(document).on('click','#callbtn',function(){
+            callspbtn();
+        });
+
+        function jsonsend(){
+            var addrs = $("#addrs6").val();
+            //encode 안하면 퍼센트같은 기호가 변환되어서 전송됨
+            var url2 = encodeURIComponent(addrs);
+            //console.log("addrs > ",addrs," , url2 > ",url2);
+
+            $.ajax({
+                type : "post",
+                url : "/getparam6",
+                data : url2, //addrs
+                datatype:'html',
+                success : function(data){
+                    console.log("jsonsend success > ",data);
+                    getsplit(data); //data : url2
+                },
+                error:function (xhr, status, error){
+                    console.log(error,xhr,status);
+                }
+            });//ajax
+
+        }//jsonsend
+
+        //url 입력 시 &기준으로 파라메터 나누기
+        function getsplit(data1){
+            var data = decodeURIComponent(data1);  //servicekey 에 있는 &, =값 살리기
+            var str = "";
+
+            //console.log('getas data > ', data,', data1 >',data1);
+            //console.log("");
+            $("#urltbody").empty();
+            $("#tfoot1").empty();
+
+            //&기분으로 나눈 파라메터 값을 input 안에 넣어주기
+            for (key in data1){
+                var ks = key.split("&")
+                //console.log('split > ',key.split("&"),' , len > ',ks.length)
+                for (var i=0 ;i<ks.length;i++){
+                    str = "";
+                    str += "<tr>";
+                    str += "<td>"
+                        + "<input type='text' class='urlparam' value='" +ks[i]+"'>"
+                        + "</td>";
+                    str += "</tr>";
+                    $("#urltbody").append(str);
+                }
+            }
+
+            var fstr=""
+            fstr += "<tr>";
+            fstr += "<td></td>";
+            fstr += "<td>"
+                + "<button type='button' id='callbtn' value='호출'>"+"호출</button>"
+                +"</td>";
+            fstr += "</tr>";
+
+            $("#tfoot1").append(fstr);
+
+        }
+
+
+        function callspbtn(){
+            var urlparam = $(".urlparam");
+
+            //parameter 값 연결하기
+            var str = "";
+            for (var i=0;i<urlparam.length;i++){
+                console.log('urlparam > ',$(urlparam[i]).val());
+                if (i == 0){
+                    str = $(urlparam[i]).val();
+                }else{
+                    str = str +"&"+ $(urlparam[i]).val();
+                }
+            }
+
+            console.log('urlparam str > ',str);
+            var url2 = encodeURIComponent(str);
+
+            $.ajax({
+                type : "post",
+                url : "/callurl1",
+                data : url2,   // JSON.stringify()
+                datatype:'json',
+                success : function(data){
+                    console.log("success > ",data);
+                    xmldata(data);
+                },
+                error:function (xhr, status, error){
+                    console.log(error,xhr,status);
+                }
+            });//ajax
+        }
+
+        //호출번튼 눌렀을 떄 새로 볼러온 url 의 xml 내용 가져오기
+        function xmldata(data) {
+            // var data1 = new XMLSerializer().serializeToString(data);
+            $("#textarea2").val(data);
+            console.log("data serial > ", data);
+
+            var fstr=""
+            fstr += "<div>";
+            fstr += "<textarea id='textarea2' cols='70' rows='30'>"
+                +data
+                +"</textarea>";
+            fstr += "</div>";
+
+            $("#resultarea").append(fstr);
+
+        }
+
+
+    });
+
+</script>
+
+
+
+</body>
+</html>

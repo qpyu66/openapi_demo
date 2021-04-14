@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>page5</title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+page5
+
+
+<div>
+    <div>
+        <div>
+            <table>
+                <tbody id="paramtbody">
+                <tr>
+                    <td></td>
+                    <td><button type="button" id="paramsubmit" value="확인">확인</button></td>
+                </tr>
+                <tr>
+                    <td>url</td>
+                    <td><input type="text" id="addrs" name="addrs" ></td>
+                </tr>
+                <tr>
+                    <td>servicekey</td>
+                    <td><input type="text" id="servicekey" name="servicekey"></td>
+                </tr>
+                    <tr>
+                        <td>파라메터</td>
+<!--                        <td><input type="text" class="param1" name="param1"></td>-->
+<!--                        <td><input type="text" class="param2" name="param2"></td>-->
+                        <td><button type="button" id="addbtn" value="+">+</button>
+                            <button type="button" id="delbtn" value="-">-</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function (){
+        $('#addbtn').click(function(){
+            addparam();
+        });
+        $('#delbtn').click(function(){
+            delparam();
+        });
+        $('#paramsubmit').click(function(){
+            jsonsend();
+            //formsend();
+        });
+
+
+        function jsonsend(){
+            var obj = {};
+            var p1inputs = $(".param1");
+            var p2inputs = $(".param2");
+
+            obj["addrs"] = $("#addrs").val();
+            obj["servicekey"] = $("#servicekey").val();
+
+            for (var i=0;i<p1inputs.length;i++){
+                console.log('p1 > ',$(p1inputs[i]).val());
+                console.log('p2 > ',$(p2inputs[i]).val());
+                obj[$(p1inputs[i]).val()] = $(p2inputs[i]).val();
+            }
+            console.log("obj > ",obj, "json > ", JSON.stringify(obj));
+
+
+
+            $.ajax({
+                type : "post",
+                url : "/getparam1",
+                data : obj, //JSON.stringify(obj) //obj전체가 key값으로 전달됨
+                datatype:'json',
+                success : function(data){
+                    console.log("success > ",data);
+                },
+                error:function (xhr, status, error){
+                    console.log(error,xhr,status);
+                }
+            });//ajax
+
+        }
+
+
+        //parameter 추가버튼
+        function addparam(){
+            var addhtml = "";
+
+            addhtml += "<tr>"+"<td>파라메터</td>";
+            addhtml += "<td>"+"<input type='text' class='param1' >"+"</td>";
+            addhtml += "<td>"+"<input type='text' class='param2'>"+"</td>";
+            addhtml += "</tr>";
+
+            $("#paramtbody").append(addhtml);
+
+        }
+
+        //parameter 삭제버튼
+        function delparam(){
+            var addhtml = "";
+            addhtml += "<tr>";
+
+        }
+
+
+
+    });
+
+</script>
+
+
+</body>
+</html>

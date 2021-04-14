@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page6</title>
+</head>
+<body>
+
+
+
+<div>
+    <div>
+        <div>
+            <table > <!-- class="table table-bordered table-hover text-center" width="100%"  -->
+                <tbody id="paramtbody">
+                <tr>
+                    <td></td>
+                    <td><button type="button" id="paramsubmit" value="확인">확인</button></td>
+                </tr>
+                <tr>
+                    <td>url</td>
+                    <td><input type="text" id="addrs6" size = "50"></td>
+                </tr>
+                <tr>
+                    <td>servicekey</td>
+                    <td><input type="text" id="servicekey" name="servicekey"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        -------
+
+        <div id = "resultview1">
+
+            <table >
+                <tbody id="urltbody">
+                    <tr>
+                        <td>result table</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+
+                <tfoot id = 'tfoot1' ></tfoot>
+
+            </table>
+
+
+        </div>
+
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function (){
+        $(document).on('click','#paramsubmit',function(){
+        //$('#paramsubmit').click(function(){
+            jsonsend();
+        });
+        $(document).on('click','#callbtn',function(){
+            //callbtnfunc();
+            callspbtn();
+        });
+
+
+        function jsonsend(){
+
+            var addrs = $("#addrs6").val();
+            console.log("addrs > ",addrs);
+
+            var url2 = encodeURIComponent(addrs);
+            var url3 = decodeURIComponent(url2); //==addrs
+            console.log("jsonsend url2 > ",url2 , ", url3 > ",url3);
+
+            $.ajax({
+                type : "post",
+                url : "/getparam6",
+                data : url2, //addrs //JSON.stringify(obj) //obj전체가 key값으로 전달됨 //url2 로하면
+                datatype:'html',
+                success : function(data){
+                    console.log("jsonsend success > ",data);
+                    //getparam(addrs); //data:addrs
+                    getsplit(data); //data : url2
+                },
+                error:function (xhr, status, error){
+                    console.log(error,xhr,status);
+                }
+            });//ajax
+
+        }//jsonsend
+
+        function getparam(data1){
+            var data = decodeURIComponent(data1);
+            var str = "";
+
+            console.log('getparam data > ', data,', data1 >',data1);
+            console.log("");
+            $("#urltbody").empty();
+            $("#tfoot1").empty();
+
+            // var as = data1.split("&")
+            // console.log("as > ",as);
+
+            for (key in data){
+                console.log("key > ",key );
+                console.log("value > ",data[key] );
+                str = "";
+                str += "<tr>";
+                str += "<td>"
+                    + "<input type='text' class='urlkey' value='" +key+"'>"
+                    + "</td>";
+                str += "<td>"
+                    + "<input type='text' class='urlvalue' value='" +data[key]+"'>" // +"'>" //+data[key]+"'>"
+                    +"</td>";
+                str += "</tr>";
+                $("#urltbody").append(str);
+            }
+
+            var fstr=""
+            fstr += "<tr>";
+            fstr += "<td></td>";
+            fstr += "<td>"
+                + "<button type='button' id='callbtn' value='호출'>"+"호출</button>"
+                +"</td>";
+            fstr += "</tr>";
+
+            $("#tfoot1").append(fstr);
+
+        }
+
+        function callbtnfunc(){
+            var rows = document.getElementById("urltbody").getElementsByTagName("tr");
+            console.log("rows > ",rows," , tr len >",rows.length);
+
+            var obj = {};
+            var urlkey = $(".urlkey");
+            var urlvalue = $(".urlvalue");
+            var strs = "";
+
+            for (var i=0;i<urlkey.length;i++){
+                console.log('p1 > ',$(urlkey[i]).val());
+                console.log('p2 > ',$(urlvalue[i]).val());
+                obj[$(urlkey[i]).val()] = $(urlvalue[i]).val();
+                if (i == 0){
+                    strs = $(urlkey[i]).val()+"="+$(urlvalue[i]).val();
+                }else{
+                    strs = strs + "&" +$(urlkey[i]).val()+"="+$(urlvalue[i]).val();
+                }
+            }
+            console.log("obj > ",obj, "json > ", JSON.stringify(obj));
+            console.log("strs > "+strs);
+
+            var url2 = encodeURIComponent(strs);
+            var url3 = decodeURIComponent(url2);
+            console.log("callbtnfunc url2 > ",url2 , ", url3 > ",url3);
+            $.ajax({
+                type : "post",
+                url : "/callurl1",
+                data : url2, // JSON.stringify()
+                datatype:'json',
+                success : function(data){
+                    console.log("callbtnfunc success > ",data);
+                    //getparam(data);
+                },
+                error:function (xhr, status, error){
+                    console.log(error,xhr,status);
+                }
+            });//ajax
+
+        }
+
+
+
+        function getsplit(data1){
+            var data = decodeURIComponent(data1);
+            var str = "";
+
+            console.log('getas data > ', data,', data1 >',data1);
+            console.log("");
+            $("#urltbody").empty();
+            $("#tfoot1").empty();
+
+            for (key in data1){
+
+                var ks = key.split("&")
+                console.log('split > ',key.split("&"))
+                console.log('len > ',ks.length)
+                for (var i=0 ;i<ks.length;i++){
+                    str = "";
+                    str += "<tr>";
+                    str += "<td>"
+                        + "<input type='text' class='urlparam' value='" +ks[i]+"'>"
+                        + "</td>";
+                    // str += "<td>"
+                    //     + "<input type='text' class='urlvalue' value='" +data[key]+"'>" // +"'>" //+data[key]+"'>"
+                    //     +"</td>";
+                    str += "</tr>";
+                    $("#urltbody").append(str);
+                }
+
+            }
+
+            var fstr=""
+            fstr += "<tr>";
+            fstr += "<td></td>";
+            fstr += "<td>"
+                + "<button type='button' id='callbtn' value='호출'>"+"호출</button>"
+                +"</td>";
+            fstr += "</tr>";
+
+            $("#tfoot1").append(fstr);
+
+        }
+
+
+
+        function callspbtn(){
+            var urlparam = $(".urlparam");
+
+            //parameter 값 연결하기
+            var str = "";
+            for (var i=0;i<urlparam.length;i++){
+                console.log('urlparam > ',$(urlparam[i]).val());
+                if (i == 0){
+                    str = $(urlparam[i]).val();
+                }else{
+                    str = str +"&"+ $(urlparam[i]).val();
+                }
+            }
+
+            console.log('urlparam str > ',str);
+            var url2 = encodeURIComponent(str);
+
+            $.ajax({
+                type : "post",
+                url : "/callurl1",
+                data : url2,   // JSON.stringify()
+                datatype:'json',
+                success : function(data){
+                    console.log("success > ",data);
+                },
+                error:function (xhr, status, error){
+                    console.log(error,xhr,status);
+                }
+            });//ajax
+
+
+
+        }
+
+
+
+
+
+
+    });
+
+</script>
+
+
+
+</body>
+</html>

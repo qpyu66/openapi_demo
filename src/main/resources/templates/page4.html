@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>page4</title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+
+templates page4
+<div>
+    <div>
+<!--        <form action="page14.html" method="post">-->
+        <table>
+            <tr>
+                <td>url</td>
+                <td><input type="text" id="addrs" name="addrs" ></td>
+            </tr>
+            <tr>
+                <td>servicekey</td>
+                <td><input type="text" id="servicekey" name="servicekey"></td>
+            </tr>
+            <tr>
+                <td>pageno</td>
+                <td><input type="number" id="pageno" name="pageno"></td>
+            </tr>
+            <tr>
+                <td>numofrows</td>
+                <td><input type="number" id="numofrows" name="numofrows"></td>
+            </tr>
+
+<!--            <tr>-->
+<!--                <td></td>-->
+<!--                <td><button type="button" id="submit" value="확인">확인</button></td>-->
+<!--            </tr>-->
+            <tr>
+                <td></td>
+                <td><button type="button" id="submit3" value="확인">확인</button></td>
+            </tr>
+        </table>
+<!--        </form>-->
+
+    </div>
+
+    <div id="resultdiv">
+        <table border ='1'>
+            <tbody id="tbody1">
+            </tbody>
+        </table>
+    </div>
+    <div id="resultarea">
+        <textarea id="textarea1" cols="50" rows="30">
+        </textarea>
+    </div>
+
+
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function (){
+        //
+        // $('#submit').click(function(){
+        //     submit1check();
+        // });
+        $('#submit3').click(function(){
+            submit3check();
+        });
+
+
+        function submit3check(){
+            var addrs = $('#addrs').val("http://openapi.data.go.kr/openapi/service/rest/Covid19/getCovid19InfStateJson");
+            var servicekey = $('#servicekey').val();
+            var pageno = $('#pageno').val();
+            var numofrows = $('#numofrows').val();
+
+            //널검사
+            // if (addrs == "") {
+            //     alert("url을 입력하세요");
+            //     $("#addrs").focus();
+            //     return;
+            // }
+            if (servicekey == "") {
+                alert("servicekey을 입력하세요");
+                $("#servicekey").focus();
+                return;
+            }
+            if (numofrows == "") {
+                alert("numofrows을 입력하세요");
+                $("#numofrows").focus();
+                return;
+            }
+            if (pageno == "") {
+                alert("pageno을 입력하세요");
+                $("#pageno").focus();
+                return;
+            }
+            var data1 = {
+                addrs : $('#addrs').val(),
+                servicekey: $('#servicekey').val(),
+                numofrows: $('#numofrows').val(),
+                pageno: $('#pageno').val()
+            }
+            console.log('data1 => ',data1);
+
+                $.ajax({
+                    url : "/getjson3",
+                    type:"post",
+                    dataType : "xml", //text(data결과 출력 안됨) , JSON(error)
+                    data : data1, //JSON.stringify(data)
+                    success: function(data){
+                        console.log("success data1 >",data);
+                        xmldata(data);
+                        alert("success");
+                    },error:function (xhr, status, error){
+                        console.log("error >",xhr,' , ',error);
+                    }
+                }); //ajax
+
+        }
+
+
+
+        function xmldata(data){
+            var data1 = new XMLSerializer().serializeToString(data);
+            $("#textarea1").val(data1);
+            console.log("data serial > ", data1);
+
+            /*데이터 동적 생성*/
+
+            // var html = "";
+            // var item = response.find('item');
+            // $("#resultdiv").append(item);
+            // $("#resultdiv").append("<br>")
+            // console.log("item > ",item);
+            //
+            // $.each(item, function (key,value){
+            //     console.log('each data > ',data,'key > ',key,'value > ',value);
+            //     var accDefRate = $(item).find("accDefRate").text();
+            //     var accExamCnt = $(item).find("accExamCnt").text();
+            //
+            //     html += "<tr>";
+            //     html += "<td>accDefRate</td>";
+            //     html += "<td>"+accDefRate+"</td>"
+            //     html += "</tr>";
+            //     html += "<tr>";
+            //     html += "<td>accExamCnt</td>";
+            //     html += "<td>"+accExamCnt+"</td>"
+            //     html += "</tr>";
+            // });
+            //
+            // $("#tbody1").empty();
+            // $("#tbody1").append(html);
+
+        }
+
+        /*getjson1이 출력 안됨*/
+        //
+        // function submit1check(){
+        //     var addrs = $('#addrs').val("http://openapi.data.go.kr/openapi/service/rest/Covid19/getCovid19InfStateJson");
+        //     var servicekey = $('#servicekey').val();
+        //     var pageno = $('#pageno').val();
+        //     var numofrows = $('#numofrows').val();
+        //
+        //     //널검사
+        //     // if (addrs == "") {
+        //     //     alert("url을 입력하세요");
+        //     //     $("#addrs").focus();
+        //     //     return;
+        //     // }
+        //     if (servicekey == "") {
+        //         alert("servicekey을 입력하세요");
+        //         $("#servicekey").focus();
+        //         return;
+        //     }
+        //     if (numofrows == "") {
+        //         alert("numofrows을 입력하세요");
+        //         $("#numofrows").focus();
+        //         return;
+        //     }
+        //     if (pageno == "") {
+        //         alert("pageno을 입력하세요");
+        //         $("#pageno").focus();
+        //         return;
+        //     }
+        //     var data1 = {
+        //         addrs : $('#addrs').val(),
+        //         servicekey: $('#servicekey').val(),
+        //         numofrows: $('#numofrows').val(),
+        //         pageno: $('#pageno').val()
+        //     }
+        //     console.log('data1 => ',data1);
+        //     $.ajax({
+        //         url : "/getjson1",
+        //         type:"post",
+        //         dataType : "xml", //text , JSON
+        //         data : data1, //JSON.stringify(data1)
+        //         success: function(data){
+        //             console.log("success, ",data);
+        //         },error:function (xhr, status, error){
+        //             console.log("error > ",xhr , ' , ',status);
+        //         }
+        //     }); //ajax
+        //
+        //
+        // }
+
+
+
+
+
+    });
+
+</script>
+
+
+</body>
+</html>
