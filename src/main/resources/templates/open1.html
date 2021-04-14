@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>open1</title>
+</head>
+<body>
+
+<div>
+    <div>
+        <table>
+            <tbody id="openbody1">
+                <tr>
+                    <td>api이름</td>
+                    <td><input type="text" id="apiname" size = "50" placeholder="코로나바이러스 api"></td>
+                </tr>
+                <tr>
+                    <td>url주소</td>
+                    <td><input type="text" id="urladdr" size = "50" placeholder="http://"></td>
+                </tr>
+                <tr>
+                    <td>servicekey</td>
+                    <td><input type="text" id="urlservicekey" size = "50" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>순서대로 추가</td>
+                    <td><button type="button" id="add_date" value="날짜">날짜</button>
+                        <button type="button" id="add_num" value="숫자">숫자</button>
+                        <button type="button" id="add_code" value="코드값">코드값</button>
+<!--                        <button type="button" id="addparam1" value="추가">추가</button>-->
+                    </td>
+                </tr>
+<!--                <tr id="add_param">-->
+<!--                </tr>-->
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td><button type="button" id="save_api" value="저장">저장</button></td>
+                </tr>
+
+            </tfoot>
+        </table>
+
+        <table>
+            <tbody>
+
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function (){
+        $(document).on('click','#addparam1',function(){
+            addparam();
+        }); // document addparam
+        $(document).on('click','#add_date',function(){
+            datefunc();
+        }); // document datefunc
+        $(document).on('click','#add_num',function(){
+            numfunc();
+        }); // document numfunc
+        $(document).on('click','#add_code',function(){
+            codefunc();
+        }); // document codefunc
+        $(document).on('click','.delbtn',function(){
+            $(this).closest('tr').remove();
+            //delfunc();
+        }); // document delbtn
+        $(document).on('click','#save_api',function(){
+            savefunc();
+        }); // document savefunc
+
+
+        //날짜 입력
+        function datefunc(){
+            var str=""
+
+            str += "<tr>";
+            str += "<td>날짜선택</td>";
+            str += "<td>"
+                + "<input type='text' class='dateparam' placeholder='parameter value' >"
+                //datepicker 추가
+                + "<input type='text' class='dateparam'>"
+                + "<input type='text' class='dateparam'>"
+                 + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"
+                +"</td>";
+            str += "</tr>";
+
+            $("#openbody1").append(str);
+        }
+
+
+        //숫자 입력
+        function numfunc(){
+            var str=""
+
+            str += "<tr>";
+            str += "<td>숫자입력</td>";
+            str += "<td>"
+                + "<input type='text' class='numparam' placeholder='parameter value'>"
+                + "<input type='number' class='numparam'>"
+                 + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"
+                +"</td>";
+            str += "</tr>";
+
+            $("#openbody1").append(str);
+        }
+
+
+        //코드 입력
+        function codefunc(){
+            var str=""
+
+            str += "<tr>";
+            str += "<td>코드 입력</td>";
+            str += "<td>"
+                + "<input type='text' class='codeparam' placeholder='parameter value'>"
+                + "<input type='text' class='codeparam' aria-colspan='20'>"
+                 + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"
+                +"</td>";
+            str += "</tr>";
+
+            $("#openbody1").append(str);
+        }
+
+
+
+
+        //저장버튼
+        function savefunc(){
+            alert("save btn");
+            var bd = $("#openbody1").val();
+            console.log("bd > ",bd);
+
+            // $.ajax({
+            //     type : "post",
+            //     url : "",
+            //     data : "",
+            //     datatype:'JSON', //html, xml
+            //     success : function(data){
+            //         console.log("sendparam success > ",data);
+            //     },
+            //     error:function (xhr, status, error){
+            //         console.log(error,xhr,status);
+            //     }
+            // });//ajax
+
+        } //savefunc
+
+
+
+
+        //동적 테이블 행 생성
+        /*function addparam(){
+            var str=""
+            str += "<tr>";
+            str += "<td></td>";
+            str += "<td>"
+                + "<input type='text' class='urlparam'>"
+                + "<input type='text' class='urlparam'>"
+               // + "<button type='button' id='callbtn' value='호출'>"+"호출</button>"
+                +"</td>";
+            str += "</tr>";
+            $("#openbody1").append(str);
+        }*/
+
+
+
+    });//document ready
+
+
+
+</script>
+
+</body>
+</html>
