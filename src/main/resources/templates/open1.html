@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>open1</title>
     <!-- Jquery ui css 파일-->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -13,19 +13,21 @@
 
 <div>
     <div>
+        <form id="formid" method="post">
+
         <table>
             <tbody id="openbody1">
                 <tr>
                     <td>api이름</td>
-                    <td><input type="text" id="apiname" size = "50" placeholder="코로나바이러스 api"></td>
+                    <td><input type="text" class='dateparam' name="apiname" size = "50" placeholder="코로나바이러스 api" ></td>
                 </tr>
                 <tr>
                     <td>url주소</td>
-                    <td><input type="text" id="urladdr" size = "50" placeholder="http://"></td>
+                    <td><input type="text" class='dateparam' name="urladdr"  size = "50" placeholder="http://" ></td>
                 </tr>
                 <tr>
                     <td>servicekey</td>
-                    <td><input type="text" id="urlservicekey" size = "50" placeholder=""></td>
+                    <td><input type="text" class='dateparam' name="urlservicekey" size = "50" placeholder="" ></td>
                 </tr>
                 <tr>
                     <td>순서대로 추가</td>
@@ -45,7 +47,7 @@
 
             </tfoot>
         </table>
-
+        </form>
 
     </div>
 </div>
@@ -72,7 +74,8 @@
             $(this).closest('tr').remove();
         }); // document delbtn
         $(document).on('click','#save_api',function(){
-            savefunc();
+            formsendfunc();
+            //savefunc();
         }); // document savefunc
 
         $.datepicker.setDefaults({
@@ -85,6 +88,7 @@
             ,changeYear: true //콤보박스에서 년 선택 가능
             ,changeMonth: true //콤보박스에서 월 선택 가능
         });
+        $(".datepick").each(function(){ $(this).datepicker(); });
 
 
 
@@ -95,11 +99,11 @@
             str += "<tr>";
             str += "<td>날짜선택</td>";
             str += "<td>"
-                + "<input type='text' class='dateparam' placeholder='parameter value' >"
+                + "<input type='text' class='dateparam' name='dateparam' placeholder='parameter value'  >"
                 //datepicker 추가
-                + "<input type='text' class='datepick' id='sdate'>"
-                + "<input type='text' class='datepick' id='edate'>"
-                 + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"
+                + "<input type='text' class='datepick' name='datepickval' >"
+               // + "<input type='text' class='datepick' id='edate'>"
+                + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"
                 +"</td>";
             str += "</tr>";
 
@@ -107,12 +111,6 @@
 
             //동적 datepicker생성 시
             $(document).find(".datepick").removeClass('hasDatepicker').datepicker();
-
-            $("#sdate").datepicker({
-
-            });
-            // $("#edate").datepicker({
-            // });
         }
 
 
@@ -123,8 +121,8 @@
             str += "<tr>";
             str += "<td>숫자입력</td>";
             str += "<td>"
-                + "<input type='text' class='numparam' placeholder='parameter value'>"
-                + "<input type='number' class='numparam'>"
+                + "<input type='text' class='numparam' name='numparam' placeholder='parameter value'>"
+                + "<input type='number' class='numparam' name='numval'>"
                  + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"
                 +"</td>";
             str += "</tr>";
@@ -140,14 +138,55 @@
             str += "<tr>";
             str += "<td>코드 입력</td>";
             str += "<td>"
-                + "<input type='text' class='codeparam' placeholder='parameter value'>"
-                + "<input type='text' class='codeparam' aria-colspan='20'>"
+                + "<input type='text' class='codeparam' name='codeparam' placeholder='parameter value'>"
+                + "<input type='text' class='codeparam' name='codeval'>"
                  + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"
                 +"</td>";
             str += "</tr>";
 
             $("#openbody1").append(str);
         }
+
+
+        function formsendfunc(){
+            var formid = $('#formid').serializeArray();  //동적 입력된 값도 들어옴 // form name태그 필수
+            var obj = {};
+            var paramval = "";
+            var dataval="";
+
+            for (var i=0;i<formid.length;i++){
+                if(i <=2){ //servicekey값까지는 name입력
+                    obj[formid[i]['name']] = formid[i]['value'];
+                }else {
+                    if(i % 2 == 1){ //홀수일경우 파라메터 이름
+                        paramval = formid[i]['value'];
+
+                    }else{ //짝수일경우 파라메터 값
+                        dataval = formid[i]['value'];
+                    }
+                }
+                obj[paramval] = dataval;
+            }
+
+            var formjson = JSON.stringify(obj);
+
+            console.log(' formid > ',formid," obj > ",obj,', formjson> ',formjson);
+
+            $.ajax({
+                type : "post",
+                url : "/openparam1",
+                data : obj,
+                datatype:'json',
+                success : function(data){
+                    console.log("success > ",data);
+                },
+                error:function (xhr, status, error){
+                    console.log(error,xhr,status);
+                }
+            });//ajax
+
+        }
+
 
 
 
@@ -175,21 +214,6 @@
         } //savefunc
 
 
-
-
-        //동적 테이블 행 생성
-        /*function addparam(){
-            var str=""
-            str += "<tr>";
-            str += "<td></td>";
-            str += "<td>"
-                + "<input type='text' class='urlparam'>"
-                + "<input type='text' class='urlparam'>"
-               // + "<button type='button' id='callbtn' value='호출'>"+"호출</button>"
-                +"</td>";
-            str += "</tr>";
-            $("#openbody1").append(str);
-        }*/
 
 
 
