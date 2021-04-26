@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page7</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css">
+
+</head>
+<body>
+page7
+key, value로 나뉘어져서 값입력받기 가능
+input쪽에 데이터 변경해서 호출 누르면 아래 xml내용 변경되서 호출됨
+
+<div>
+    <div>
+        <div>
+            <table > <!-- class="table table-bordered table-hover text-center" width="100%"  -->
+                <tbody id="paramtbody7">
+                <tr>
+                    <td></td>
+                    <td><button type="button" id="paramsubmit7" value="확인">확인</button></td>
+                </tr>
+                <tr>
+                    <td>url</td>
+                    <td><input type="text" id="addrs7" size = "50"></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        -------
+
+        <div id = "resultview7">
+
+            <table >
+                <tbody id="urltbody7">
+
+                </tbody>
+                <tfoot id = 'tfoot7' ></tfoot>
+            </table>
+        </div>
+
+        ---===---
+
+        <div>
+            <div id="resultarea7">
+<!--                <textarea id="textarea2" cols="50" rows="30">-->
+<!--                </textarea>-->
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+
+    $(document).ready(function (){
+        $(document).on('click','#paramsubmit7',function(){
+            jsonsend();
+        });
+        $(document).on('click','#callbtn7',function(){
+
+            callspbtn();
+        });
+
+        function jsonsend(){
+            var addrs = $("#addrs7").val();
+            var url2 = encodeURIComponent(addrs);
+            console.log("addrs > ",addrs," , url2 > ",url2);
+
+            $.ajax({
+                type : "post",
+                url : "/getparam7",
+                data : url2, //url2 , addrs
+                datatype:'html',
+                success : function(data){
+                    console.log("jsonsend success > ",data);
+                    getsplit(data); //data : url2
+                },
+                error:function (xhr, status, error){
+                    console.log(error,xhr,status);
+                }
+            });//ajax
+
+        }//jsonsend
+
+        function getsplit(data1){
+            var data = decodeURIComponent(data1);  //servicekey 에 있는 &, =값 살리기
+
+            var str = "";
+
+            console.log('getas data > ', data,', data1 >',data1);
+            console.log("");
+            $("#urltbody7").empty();
+            $("#tfoot7").empty();
+
+            for (key in data1){
+
+                var ks = key.split("&")
+                console.log('ks split > ',ks)
+
+                // var vs = ks.split("=")
+                // console.log('vs slice > ',vs)
+
+                console.log('len > ',ks.length)
+                // for (var i=0 ;i<ks.length;i++){
+                //     str = "";
+                //     str += "<tr>";
+                //     str += "<td>"
+                //         + "<input type='text' class='urlparam' value='" +ks[i]+"'>"
+                //         + "</td>";
+                //     str += "</tr>";
+                //     $("#urltbody7").append(str);
+                // }
+
+                for (var i=0 ;i<ks.length;i++){
+                    var vs = ks[i].split("=")
+                    console.log('vs slice > ',vs)
+                    //console.log('vs len > ',vs.length)
+                    str = "";
+                    str += "<tr>";
+                    str += "<td>"
+                        //+ "<input type='text' class='urlparam' value='" +ks[i]+"'>"
+                        //vs[0] 는 parameter key값, vs[1]은 parameter value값 (=) 기준으로 나누기
+                        + "<input type='text' class='urlparam' value='" +vs[0]+"'>"
+                        + "<input type='text' class='urlvalue' value='" +vs[1]+"'>"
+                        + "</td>";
+                    str += "</tr>";
+                    $("#urltbody7").append(str);
+                }
+
+            }
+
+
+            var fstr=""
+            fstr += "<tr>";
+            fstr += "<td></td>";
+            fstr += "<td>"
+                + "<button type='button' id='callbtn7' value='호출'>"+"호출</button>"
+                +"</td>";
+            fstr += "</tr>";
+
+            $("#tfoot7").append(fstr);
+
+        }
+
+
+
+        function callspbtn(){
+            var urlparam = $(".urlparam");
+            var urlvalue = $(".urlvalue");
+
+            //parameter 값 연결하기
+            var str = "";
+            for (var i=0;i<urlparam.length;i++){
+                console.log('urlparam > ',$(urlparam[i]).val(),' , urlvalue > ',$(urlvalue[i]).val());
+
+                if (i == 0){ //www ,servicekey부분
+                    str = $(urlparam[i]).val()+"="+$(urlvalue[i]).val();
+                }else{
+                    str = str +"&"+ $(urlparam[i]).val()+"="+$(urlvalue[i]).val();
+                }
+
+            }
+
+            console.log('urlparam str > ',str);
+            var url2 = encodeURIComponent(str);
+            console.log('url2 > ',url2);
+            var data7= decodeURIComponent(url2);  // == str
+            console.log('data7 > ',data7);
+
+            $.ajax({
+                type : "post",
+                url : "/callurl7",
+                data : url2,   // url2 //str
+                datatype:'json',
+                success : function(data){
+                    console.log("success > ",data);
+                    xmldata(data);
+                },
+                error:function (xhr, status, error){
+                    console.log(error,xhr,status);
+                }
+            });//ajax
+        }
+
+
+
+        function xmldata(data) {
+            // var data1 = new XMLSerializer().serializeToString(data);
+            $("#resultarea7").empty();
+            $("#textarea2").val(data);
+             console.log("data serial > ", data);
+
+            var fstr=""
+            fstr += "<div>";
+            fstr += "<textarea id='textarea2' cols='70' rows='30'>"
+                +data
+                +"</textarea>";
+
+            fstr += "</div>";
+
+            $("#resultarea7").append(fstr);
+
+        }
+
+
+    });
+
+</script>
+
+</body>
+</html>

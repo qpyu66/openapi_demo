@@ -1,227 +1,227 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>open1</title>
-    <!-- Jquery ui css 파일-->
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css">
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+<!--    <title>open1</title>-->
+<!--    &lt;!&ndash; Jquery ui css 파일&ndash;&gt;-->
+<!--    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>-->
+<!--    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+<!--    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css">-->
 
-</head>
-<body>
+<!--</head>-->
+<!--<body>-->
 
-<div>
-    <div>
-        <form id="formid" method="post">
+<!--<div>-->
+<!--    <div>-->
+<!--        <form id="formid" method="post">-->
 
-        <table>
-            <tbody id="openbody1">
-                <tr>
-                    <td>api이름</td>
-                    <td><input type="text" class='dateparam' name="apiname" size = "50" placeholder="코로나바이러스 api" ></td>
-                </tr>
-                <tr>
-                    <td>url주소</td>
-                    <td><input type="text" class='dateparam' name="urladdr"  size = "50" placeholder="http://" ></td>
-                </tr>
-                <tr>
-                    <td>servicekey</td>
-                    <td><input type="text" class='dateparam' name="urlservicekey" size = "50" placeholder="" ></td>
-                </tr>
-                <tr>
-                    <td>순서대로 추가</td>
-                    <td><button type="button" id="add_date" value="날짜">날짜</button>
-                        <button type="button" id="add_num" value="숫자">숫자</button>
-                        <button type="button" id="add_code" value="코드값">코드값</button>
-<!--                        <button type="button" id="addparam1" value="추가">추가</button>-->
-                    </td>
-                </tr>
+<!--        <table>-->
+<!--            <tbody id="openbody1">-->
+<!--                <tr>-->
+<!--                    <td>api이름</td>-->
+<!--                    <td><input type="text" class='dateparam' name="apiname" size = "50" placeholder="코로나바이러스 api" ></td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td>url주소</td>-->
+<!--                    <td><input type="text" class='dateparam' name="urladdr"  size = "50" placeholder="http://" ></td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td>servicekey</td>-->
+<!--                    <td><input type="text" class='dateparam' name="urlservicekey" size = "50" placeholder="" ></td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td>순서대로 추가</td>-->
+<!--                    <td><button type="button" id="add_date" value="날짜">날짜</button>-->
+<!--                        <button type="button" id="add_num" value="숫자">숫자</button>-->
+<!--                        <button type="button" id="add_code" value="코드값">코드값</button>-->
+<!--&lt;!&ndash;                        <button type="button" id="addparam1" value="추가">추가</button>&ndash;&gt;-->
+<!--                    </td>-->
+<!--                </tr>-->
 
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td></td>
-                    <td><button type="button" id="save_api" value="저장">저장</button></td>
-                </tr>
+<!--            </tbody>-->
+<!--            <tfoot>-->
+<!--                <tr>-->
+<!--                    <td></td>-->
+<!--                    <td><button type="button" id="save_api" value="저장">저장</button></td>-->
+<!--                </tr>-->
 
-            </tfoot>
-        </table>
-        </form>
+<!--            </tfoot>-->
+<!--        </table>-->
+<!--        </form>-->
 
-    </div>
-</div>
-
-
-<!--<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
-<script type="text/javascript">
+<!--    </div>-->
+<!--</div>-->
 
 
-    $(document).ready(function (){
-        $(document).on('click','#addparam1',function(){
-            addparam();
-        }); // document addparam
-        $(document).on('click','#add_date',function(){
-            datefunc();
-        }); // document datefunc
-        $(document).on('click','#add_num',function(){
-            numfunc();
-        }); // document numfunc
-        $(document).on('click','#add_code',function(){
-            codefunc();
-        }); // document codefunc
-        $(document).on('click','.delbtn',function(){
-            $(this).closest('tr').remove();
-        }); // document delbtn
-        $(document).on('click','#save_api',function(){
-            formsendfunc();
-            //savefunc();
-        }); // document savefunc
-
-        $.datepicker.setDefaults({
-            dateFormat: 'yy-mm-dd'//date 표시값
-            ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
-            ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
-            ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
-            ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-            ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-            ,changeYear: true //콤보박스에서 년 선택 가능
-            ,changeMonth: true //콤보박스에서 월 선택 가능
-        });
-        $(".datepick").each(function(){ $(this).datepicker(); });
+<!--&lt;!&ndash;<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>&ndash;&gt;-->
+<!--<script type="text/javascript">-->
 
 
+<!--    $(document).ready(function (){-->
+<!--        $(document).on('click','#addparam1',function(){-->
+<!--            addparam();-->
+<!--        }); // document addparam-->
+<!--        $(document).on('click','#add_date',function(){-->
+<!--            datefunc();-->
+<!--        }); // document datefunc-->
+<!--        $(document).on('click','#add_num',function(){-->
+<!--            numfunc();-->
+<!--        }); // document numfunc-->
+<!--        $(document).on('click','#add_code',function(){-->
+<!--            codefunc();-->
+<!--        }); // document codefunc-->
+<!--        $(document).on('click','.delbtn',function(){-->
+<!--            $(this).closest('tr').remove();-->
+<!--        }); // document delbtn-->
+<!--        $(document).on('click','#save_api',function(){-->
+<!--            formsendfunc();-->
+<!--            //savefunc();-->
+<!--        }); // document savefunc-->
 
-        //날짜 입력
-        function datefunc(){
-            var str=""
-
-            str += "<tr>";
-            str += "<td>날짜선택</td>";
-            str += "<td>"
-                + "<input type='text' class='dateparam' name='dateparam' placeholder='parameter value'  >"
-                //datepicker 추가
-                + "<input type='text' class='datepick' name='datepickval' >"
-               // + "<input type='text' class='datepick' id='edate'>"
-                + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"
-                +"</td>";
-            str += "</tr>";
-
-            $("#openbody1").append(str);
-
-            //동적 datepicker생성 시
-            $(document).find(".datepick").removeClass('hasDatepicker').datepicker();
-        }
-
-
-        //숫자 입력
-        function numfunc(){
-            var str=""
-
-            str += "<tr>";
-            str += "<td>숫자입력</td>";
-            str += "<td>"
-                + "<input type='text' class='numparam' name='numparam' placeholder='parameter value'>"
-                + "<input type='number' class='numparam' name='numval'>"
-                 + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"
-                +"</td>";
-            str += "</tr>";
-
-            $("#openbody1").append(str);
-        }
-
-
-        //코드 입력
-        function codefunc(){
-            var str=""
-
-            str += "<tr>";
-            str += "<td>코드 입력</td>";
-            str += "<td>"
-                + "<input type='text' class='codeparam' name='codeparam' placeholder='parameter value'>"
-                + "<input type='text' class='codeparam' name='codeval'>"
-                 + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"
-                +"</td>";
-            str += "</tr>";
-
-            $("#openbody1").append(str);
-        }
-
-
-        function formsendfunc(){
-            var formid = $('#formid').serializeArray();  //동적 입력된 값도 들어옴 // form name태그 필수
-            var obj = {};
-            var paramval = "";
-            var dataval="";
-
-            for (var i=0;i<formid.length;i++){
-                if(i <=2){ //servicekey값까지는 name입력
-                    obj[formid[i]['name']] = formid[i]['value'];
-                }else {
-                    if(i % 2 == 1){ //홀수일경우 파라메터 이름
-                        paramval = formid[i]['value'];
-
-                    }else{ //짝수일경우 파라메터 값
-                        dataval = formid[i]['value'];
-                    }
-                }
-                obj[paramval] = dataval;
-            }
-
-            var formjson = JSON.stringify(obj);
-
-            console.log(' formid > ',formid," obj > ",obj,', formjson> ',formjson);
-
-            $.ajax({
-                type : "post",
-                url : "/openparam1",
-                data : obj,
-                datatype:'json',
-                success : function(data){
-                    console.log("success > ",data);
-                },
-                error:function (xhr, status, error){
-                    console.log(error,xhr,status);
-                }
-            });//ajax
-
-        }
+<!--        $.datepicker.setDefaults({-->
+<!--            dateFormat: 'yy-mm-dd'//date 표시값-->
+<!--            ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트-->
+<!--            ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트-->
+<!--            ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트-->
+<!--            ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시-->
+<!--            ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시-->
+<!--            ,changeYear: true //콤보박스에서 년 선택 가능-->
+<!--            ,changeMonth: true //콤보박스에서 월 선택 가능-->
+<!--        });-->
+<!--        $(".datepick").each(function(){ $(this).datepicker(); });-->
 
 
 
+<!--        //날짜 입력-->
+<!--        function datefunc(){-->
+<!--            var str=""-->
+
+<!--            str += "<tr>";-->
+<!--            str += "<td>날짜선택</td>";-->
+<!--            str += "<td>"-->
+<!--                + "<input type='text' class='dateparam' name='dateparam' placeholder='parameter value'  >"-->
+<!--                //datepicker 추가-->
+<!--                + "<input type='text' class='datepick' name='datepickval' >"-->
+<!--               // + "<input type='text' class='datepick' id='edate'>"-->
+<!--                + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"-->
+<!--                +"</td>";-->
+<!--            str += "</tr>";-->
+
+<!--            $("#openbody1").append(str);-->
+
+<!--            //동적 datepicker생성 시-->
+<!--            $(document).find(".datepick").removeClass('hasDatepicker').datepicker();-->
+<!--        }-->
 
 
-        //저장버튼
-        function savefunc(){
-            alert("save btn");
-            var bd = $("#openbody1");
-            console.log("bd > ",bd);
+<!--        //숫자 입력-->
+<!--        function numfunc(){-->
+<!--            var str=""-->
+
+<!--            str += "<tr>";-->
+<!--            str += "<td>숫자입력</td>";-->
+<!--            str += "<td>"-->
+<!--                + "<input type='text' class='numparam' name='numparam' placeholder='parameter value'>"-->
+<!--                + "<input type='number' class='numparam' name='numval'>"-->
+<!--                 + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"-->
+<!--                +"</td>";-->
+<!--            str += "</tr>";-->
+
+<!--            $("#openbody1").append(str);-->
+<!--        }-->
 
 
-            // $.ajax({
-            //     type : "post",
-            //     url : "",
-            //     data : "",
-            //     datatype:'JSON', //html, xml
-            //     success : function(data){
-            //         console.log("sendparam success > ",data);
-            //     },
-            //     error:function (xhr, status, error){
-            //         console.log(error,xhr,status);
-            //     }
-            // });//ajax
+<!--        //코드 입력-->
+<!--        function codefunc(){-->
+<!--            var str=""-->
 
-        } //savefunc
+<!--            str += "<tr>";-->
+<!--            str += "<td>코드 입력</td>";-->
+<!--            str += "<td>"-->
+<!--                + "<input type='text' class='codeparam' name='codeparam' placeholder='parameter value'>"-->
+<!--                + "<input type='text' class='codeparam' name='codeval'>"-->
+<!--                 + "<button type='button' class='delbtn' value='삭제' >"+"삭제</button>"-->
+<!--                +"</td>";-->
+<!--            str += "</tr>";-->
+
+<!--            $("#openbody1").append(str);-->
+<!--        }-->
+
+
+<!--        function formsendfunc(){-->
+<!--            var formid = $('#formid').serializeArray();  //동적 입력된 값도 들어옴 // form name태그 필수-->
+<!--            var obj = {};-->
+<!--            var paramval = "";-->
+<!--            var dataval="";-->
+
+<!--            for (var i=0;i<formid.length;i++){-->
+<!--                if(i <=2){ //servicekey값까지는 name입력-->
+<!--                    obj[formid[i]['name']] = formid[i]['value'];-->
+<!--                }else {-->
+<!--                    if(i % 2 == 1){ //홀수일경우 파라메터 이름-->
+<!--                        paramval = formid[i]['value'];-->
+
+<!--                    }else{ //짝수일경우 파라메터 값-->
+<!--                        dataval = formid[i]['value'];-->
+<!--                    }-->
+<!--                }-->
+<!--                obj[paramval] = dataval;-->
+<!--            }-->
+
+<!--            var formjson = JSON.stringify(obj);-->
+
+<!--            console.log(' formid > ',formid," obj > ",obj,', formjson> ',formjson);-->
+
+<!--            $.ajax({-->
+<!--                type : "post",-->
+<!--                url : "/openparam1",-->
+<!--                data : obj,-->
+<!--                datatype:'json',-->
+<!--                success : function(data){-->
+<!--                    console.log("success > ",data);-->
+<!--                },-->
+<!--                error:function (xhr, status, error){-->
+<!--                    console.log(error,xhr,status);-->
+<!--                }-->
+<!--            });//ajax-->
+
+<!--        }-->
 
 
 
 
 
-    });//document ready
+<!--        //저장버튼-->
+<!--        function savefunc(){-->
+<!--            alert("save btn");-->
+<!--            var bd = $("#openbody1");-->
+<!--            console.log("bd > ",bd);-->
+
+
+<!--            // $.ajax({-->
+<!--            //     type : "post",-->
+<!--            //     url : "",-->
+<!--            //     data : "",-->
+<!--            //     datatype:'JSON', //html, xml-->
+<!--            //     success : function(data){-->
+<!--            //         console.log("sendparam success > ",data);-->
+<!--            //     },-->
+<!--            //     error:function (xhr, status, error){-->
+<!--            //         console.log(error,xhr,status);-->
+<!--            //     }-->
+<!--            // });//ajax-->
+
+<!--        } //savefunc-->
 
 
 
-</script>
 
-</body>
-</html>
+
+<!--    });//document ready-->
+
+
+
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->
